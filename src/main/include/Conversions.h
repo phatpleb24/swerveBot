@@ -1,4 +1,7 @@
+#pragma once
+
 #include <numbers>
+#include <units/length.h>
 #include "Constants.h"
 
 #define sc SwerveConstants
@@ -24,10 +27,10 @@ namespace Conversions
         return sensorCounts;
     }
 
-    int VelocityToNativeUnits(units::meters_per_second_t velocity, units::inch_t wheelRadiusInches)
+    int VelocityToNativeUnits(units::meters_per_second_t velocity, units::inch_t wheelRadiusInches, double gearRatio)
     {
         auto wheelRotationPerSecond = velocity / (2 * std::numbers::pi * wheelRadiusInches);
-        auto motorRotationPerSecond = wheelRotationPerSecond * kGearRatio;
+        auto motorRotationPerSecond = wheelRotationPerSecond * gearRatio;
         double motorRotationPer100ms = motorRotationPerSecond * 1_s / k100msPerSecond;
         int sensorCountPer100ms = (int)(motorRotationPer100ms * kUnitsPerRevolution);
         return sensorCountPer100ms;

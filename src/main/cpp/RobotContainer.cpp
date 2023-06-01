@@ -2,6 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+#pragma once
 #include "RobotContainer.h"
 
 #include <frc2/command/Commands.h>
@@ -12,10 +13,10 @@ RobotContainer::RobotContainer() {
 
   swerve.SetDefaultCommand(frc2::RunCommand([this]
   {
-      auto xSpeed = -swerve.m_xspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftY(), 0.02) * Drivetrain::kMaxSpeed);
-      auto ySpeed = swerve.m_yspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftX(), 0.02) * Drivetrain::kMaxSpeed);
-      auto rotSpeed = swerve.m_rotLimiter.Calculate(frc::ApplyDeadband(controller.GetRightX(), 0.02) * Drivetrain::kMaxAngularSpeed);
-      swerve.Drive(xSpeed, ySpeed, rotSpeed, true);
+      auto xSpeed = -swerve.m_xspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftY(), 0.02) /** swerve.kMaxSpeed.value()*/);
+      auto ySpeed = swerve.m_yspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftX(), 0.02) /** swerve.kMaxSpeed.value()*/);
+      auto rotSpeed = swerve.m_rotLimiter.Calculate(frc::ApplyDeadband(controller.GetRightX(), 0.02) /** swerve.kMaxAngularSpeed.value()*/);
+      swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, true);
   }));
 }
 

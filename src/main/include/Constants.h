@@ -24,7 +24,7 @@ namespace SwerveConstants
     constexpr units::meter_t kWheelBase = 1_m;
     constexpr auto kVAngular = 2.0807 * 1_V/1_mps;
     constexpr auto kAAngular = 0.39601 * 1_V / 1_mps_sq;
-    frc::SwerveDriveKinematics<4> kinematics{
+    static frc::SwerveDriveKinematics<4> kinematics{
         frc::Translation2d{kWheelBase/2, kTrackWidth/2}, 
         frc::Translation2d{kWheelBase/2, -kTrackWidth/2}, 
         frc::Translation2d{-kWheelBase/2, kTrackWidth/2}, 
@@ -32,6 +32,7 @@ namespace SwerveConstants
     
     static constexpr units::inch_t kWheelRadiusInches = 3_in;
     static constexpr int32_t kUnitsPerRevolution = 2048;
-    static constexpr double kGearRatio = 8.45;
+    static constexpr double kDriveGearRatio = 8.45;
+    static constexpr double kAngleGearRatio = 12.8;
     static constexpr int k100msPerSecond = 10; 
 };
