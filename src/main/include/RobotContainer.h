@@ -7,16 +7,18 @@
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include "subsystems/Drivetrain.h"
+#include "subsystems/Elevator.h"
 
 class RobotContainer {
  public:
   RobotContainer();
 
   frc2::CommandPtr GetAutonomousCommand();
+  Drivetrain swerve;
+  Elevator elevator;
 
  private:
   void ConfigureBindings();
   frc2::CommandXboxController controller{1};
 
-  Drivetrain swerve;
 };

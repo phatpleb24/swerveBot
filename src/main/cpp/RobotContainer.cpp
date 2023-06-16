@@ -11,16 +11,35 @@
 RobotContainer::RobotContainer() {
   ConfigureBindings();
 
-  swerve.SetDefaultCommand(frc2::RunCommand([this]
-  {
+  swerve.SetDefaultCommand(frc2::RunCommand(
+    [this]
+    {
       auto xSpeed = -swerve.m_xspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftY(), 0.02) /** swerve.kMaxSpeed.value()*/);
       auto ySpeed = swerve.m_yspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftX(), 0.02) /** swerve.kMaxSpeed.value()*/);
       auto rotSpeed = swerve.m_rotLimiter.Calculate(frc::ApplyDeadband(controller.GetRightX(), 0.02) /** swerve.kMaxAngularSpeed.value()*/);
       swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, true);
-  }));
+    }, 
+    {&swerve}));
+  
+  elevator.SetDefaultCommand(frc2::RunCommand(
+    [this]
+    {
+      if(controller.GetAButton())
+      {
+        elevator.setState(Elevator::kRaisedPosition);
+      }
+      else
+      {
+        elevator.setState(Elevator::kLoweredPosition);
+      }
+    }, {&elevator}
+  ));
 }
 
-void RobotContainer::ConfigureBindings() {}
+void RobotContainer::ConfigureBindings() 
+{
+ 
+}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   return frc2::cmd::Print("No autonomous command configured");
