@@ -8,6 +8,7 @@
 #include <frc2/command/button/CommandXboxController.h>
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Elevator.h"
+#include "subsystems/Intake.h"
 
 class RobotContainer {
  public:
@@ -16,6 +17,7 @@ class RobotContainer {
   frc2::CommandPtr GetAutonomousCommand();
   Drivetrain swerve;
   Elevator elevator;
+  Intake intake;
 
  private:
   void ConfigureBindings();

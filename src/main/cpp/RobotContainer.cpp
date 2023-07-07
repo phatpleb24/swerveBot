@@ -7,6 +7,7 @@
 
 #include <frc2/command/Commands.h>
 #include <frc2/command/RunCommand.h>
+#include <units/angle.h>
 
 RobotContainer::RobotContainer() {
   ConfigureBindings();
@@ -33,6 +34,29 @@ RobotContainer::RobotContainer() {
         elevator.setState(Elevator::kLoweredPosition);
       }
     }, {&elevator}
+  ));
+
+  intake.SetDefaultCommand(frc2::RunCommand(
+    [this]
+    {
+      if(controller.GetYButton())
+      {
+        intake.wristSetPoint(std::max<units::degree_t>(intake.getPoint()+5_deg, intake.maxRange));
+      }
+      else if(controller.GetXButton()){
+        intake.wristSetPoint(std::min<units::degree_t>(intake.getPoint()-5_deg, intake.minRange));
+      }
+
+      if(controller.GetLeftBumper()){
+        intake.intakeSpin(1);
+      }
+      else if(controller.GetRightBumper()){
+        intake.intakeSpin(-1);
+      }
+      else{
+        intake.intakeSpin(0);
+      }
+    }
   ));
 }
 
