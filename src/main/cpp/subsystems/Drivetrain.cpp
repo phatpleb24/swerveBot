@@ -6,6 +6,7 @@
 
 Drivetrain::Drivetrain()
 {
+    fieldRelative = true;
     gyro.Reset();
     frc::SmartDashboard::PutData("Field", &m_field);
 }

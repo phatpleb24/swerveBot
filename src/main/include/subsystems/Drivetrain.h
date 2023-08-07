@@ -30,6 +30,7 @@ class Drivetrain : public frc2::SubsystemBase
     static constexpr units::meters_per_second_t kMaxSpeed = 5_mps;
     static constexpr auto kMaxAngularSpeed = 2_rad / 1_s;
     frc::Field2d m_field;
+    bool fieldRelative;
 
     void Periodic() override;
 
@@ -47,11 +48,11 @@ class Drivetrain : public frc2::SubsystemBase
     frc::SlewRateLimiter<units::dimensionless::scalar> m_rotLimiter{3 / 1_s};
 
     private:
-    WPI_Pigeon2 gyro{1};
-    SwerveModule leftFront{sc::leftFrontDrive, sc::leftFrontTurn};
-    SwerveModule leftBack{sc::leftBackDrive, sc::leftBackTurn};
-    SwerveModule rightFront{sc::rightFrontDrive, sc::rightFrontTurn};
-    SwerveModule rightBack{sc::rightBackDrive,sc::rightBackTurn};
+    WPI_Pigeon2 gyro{0};
+    SwerveModule leftFront{sc::leftFrontDrive, sc::leftFrontTurn, 0.012_V, 0.7_V/1_rad_per_s};
+    SwerveModule leftBack{sc::leftBackDrive, sc::leftBackTurn, 0.012_V, 0.7_V/1_rad_per_s};
+    SwerveModule rightFront{sc::rightFrontDrive, sc::rightFrontTurn, 0.012_V, 0.7_V/1_rad_per_s};
+    SwerveModule rightBack{sc::rightBackDrive,sc::rightBackTurn, sc::RBkSAngular, sc::RBkVAngular};
 
     frc::SwerveDriveOdometry<4> odometry{SwerveConstants::kinematics, gyro.GetRotation2d(), {leftFront.getPosition(), rightFront.getPosition(), leftBack.getPosition(), rightBack.getPosition()}};
 };

@@ -2,7 +2,6 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-#pragma once
 #include "RobotContainer.h"
 
 #include <frc2/command/Commands.h>
@@ -15,10 +14,11 @@ RobotContainer::RobotContainer() {
   swerve.SetDefaultCommand(frc2::RunCommand(
     [this]
     {
-      auto xSpeed = -swerve.m_xspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftY(), 0.02) /** swerve.kMaxSpeed.value()*/);
-      auto ySpeed = swerve.m_yspeedLimiter.Calculate(frc::ApplyDeadband(controller.GetLeftX(), 0.02) /** swerve.kMaxSpeed.value()*/);
-      auto rotSpeed = swerve.m_rotLimiter.Calculate(frc::ApplyDeadband(controller.GetRightX(), 0.02) /** swerve.kMaxAngularSpeed.value()*/);
-      swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, true);
+      if(controller.GetLeftStickButtonPressed()) swerve.fieldRelative = !swerve.fieldRelative;
+      auto xSpeed = -swerve.m_xspeedLimiter.Calculate(std::clamp(-0.2,frc::ApplyDeadband(controller.GetLeftY(), 0.05), 0.2) /** swerve.kMaxSpeed.value()*/);
+      auto ySpeed = swerve.m_yspeedLimiter.Calculate(std::clamp(-0.2,frc::ApplyDeadband(controller.GetLeftX(), 0.05), 0.2) /** swerve.kMaxSpeed.value()*/);
+      auto rotSpeed = swerve.m_rotLimiter.Calculate(std::clamp(-0.2, frc::ApplyDeadband(controller.GetRightX(), 0.05), 0.2) /** swerve.kMaxAngularSpeed.value()*/);
+      swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, swerve.fieldRelative);
     }, 
     {&swerve}));
   
@@ -56,7 +56,7 @@ RobotContainer::RobotContainer() {
       else{
         intake.intakeSpin(0);
       }
-    }
+    }, {&intake}
   ));
 }
 

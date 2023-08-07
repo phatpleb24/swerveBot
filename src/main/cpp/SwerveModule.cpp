@@ -1,9 +1,9 @@
-#pragma once
+
 
 #include "SwerveModule.h"
 #include "Conversions.h"
 
-SwerveModule::SwerveModule(int driveChannel, int turnChannel) : driveMotor(driveChannel), turnMotor(turnChannel)
+SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular) : driveMotor(driveChannel), turnMotor(turnChannel), turnFeedforward(kSAngular, kVAngular)
 {
     turnPID.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
     driveMotor.ConfigFactoryDefault();

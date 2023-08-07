@@ -40,7 +40,7 @@ class Elevator : public frc2::SubsystemBase
     static constexpr double kGearRatio = 6.0;
 
     private:
-    WPI_TalonFX leftMotor{9};
+    WPI_TalonFX leftMotor{6};
     WPI_TalonFX rightMotor{10};
 
     frc::LinearSystem<2,1,1> elevatorPlant = frc::LinearSystemId::ElevatorSystem(frc::DCMotor::Falcon500(2), kCarriageMass, kDrumRadius, kGearRatio);

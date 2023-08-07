@@ -19,7 +19,7 @@ class Intake : public frc2::SubsystemBase
     static constexpr auto kG = 1_V;
     static constexpr auto kV = 1_V * 1_s / 1_rad;
     static constexpr auto kA = 1_V * 1_s * 1_s / 1_rad;
-    static const double gearRatio = 5;
+    static constexpr double gearRatio = 5;
     Intake();
 
     void Periodic() override;
