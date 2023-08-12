@@ -31,7 +31,7 @@ class Elevator : public frc2::SubsystemBase
 
     void reset();
 
-    static constexpr units::meter_t kRaisedPosition = 50_in;
+    static constexpr units::meter_t kRaisedPosition = -50_in;
     static constexpr units::meter_t kMidPosition = 1_ft;
     static constexpr units::meter_t kLoweredPosition = 0_ft;
 
@@ -47,7 +47,7 @@ class Elevator : public frc2::SubsystemBase
     frc::KalmanFilter<2,1,1> observer{elevatorPlant, {0.0508, 0.5}, {0.001}, 20_ms};
     frc::LinearQuadraticRegulator<2, 1> controller{elevatorPlant, {0.0254, 0.254}, {12}, 20_ms};
     frc::LinearSystemLoop<2,1,1> loop{elevatorPlant, controller, observer, 12_V, 20_ms};
-    frc::TrapezoidProfile<units::meters>::Constraints constraints{3_fps, 6_fps_sq};
+    frc::TrapezoidProfile<units::meters>::Constraints constraints{1.5_fps, 1.5_fps_sq};
     frc::TrapezoidProfile<units::meters>::State lastProfiledReference;
 
     TalonFXSimCollection motorSim = leftMotor.GetSimCollection();

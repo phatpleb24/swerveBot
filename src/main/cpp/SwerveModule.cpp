@@ -48,3 +48,13 @@ void SwerveModule::resetEncoder()
 {
     driveMotor.SetSelectedSensorPosition(0);
 }
+
+double SwerveModule::getTurnEncoderCnt()
+{
+    return turnMotor.GetSelectedSensorPosition();
+}
+
+double SwerveModule::getDegrees()
+{
+    return Conversions::NativeUnitsToDegrees(getTurnEncoderCnt(), SwerveConstants::kAngleGearRatio).value();
+}

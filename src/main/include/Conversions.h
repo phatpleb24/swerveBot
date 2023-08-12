@@ -11,7 +11,7 @@ namespace Conversions
     using namespace sc;
     static units::degree_t NativeUnitsToDegrees(double nativeUnits, double gearRatio)
     {
-        return units::degree_t{nativeUnits * (360.0 / (gearRatio * kUnitsPerRevolution))};
+        return units::degree_t{nativeUnits/kUnitsPerRevolution / gearRatio * 360.0};
     }
 
     static double DegreesToNativeUnits(units::degree_t position, double gearRatio)

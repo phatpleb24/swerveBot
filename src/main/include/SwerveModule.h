@@ -20,6 +20,8 @@ class SwerveModule
     SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular);
     frc::SwerveModuleState getState();
     frc::SwerveModulePosition getPosition();
+    double getTurnEncoderCnt();
+    double getDegrees();
     void setDesiredState(const frc::SwerveModuleState& state);
     static constexpr auto kMaxAngularVelocity =
       std::numbers::pi * 1_rad / 1_s;  // radians per second
@@ -27,6 +29,7 @@ class SwerveModule
       std::numbers::pi * 2_rad / 1_s / 1_s;  // radians per second^2
 
     void resetEncoder();
+
     
     private:
     WPI_TalonFX driveMotor;
@@ -36,8 +39,5 @@ class SwerveModule
     frc::SimpleMotorFeedforward<units::meters> driveFeedforward{0.5_V, 3_V/1_mps}; //ks kv
     frc::SimpleMotorFeedforward<units::radians> turnFeedforward; //ksangle kvangle
 
-    int DistanceToNativeUnits(units::meter_t position);
-    int VelocityToNativeUnits(units::meters_per_second_t velocity);
-    units::meters_per_second_t NativeUnitstoVelocityMPS(double sensorCounts);
-    units::meter_t NativeUnitsToDistanceMeters(double sensorCounts);
+
 };

@@ -44,4 +44,9 @@ void Drivetrain::Periodic()
 {
     updateOdometry();
     m_field.SetRobotPose(getPose());
+    frc::SmartDashboard::PutNumber("Right Back Deg", rightBack.getPosition().angle.Degrees().value());
+    frc::SmartDashboard::PutNumber("Right Back Raw", rightBack.getTurnEncoderCnt());
+    frc::SmartDashboard::PutNumber("Right Back Deg Falcon", rightBack.getDegrees());
+    frc::SmartDashboard::PutBoolean("Field Relative", fieldRelative);
+    printf("Right Back Deg: %f\n", rightBack.getPosition().angle.Degrees().value());
 }

@@ -35,8 +35,8 @@ class Intake : public frc2::SubsystemBase
     private:
     units::degree_t setPoint = 0_deg;
 
-    WPI_TalonFX intakeMotor{11};
-    WPI_TalonFX wristMotor{12};
+    WPI_TalonFX intakeMotor{0};
+    WPI_TalonFX wristMotor{11};
 
     frc::PIDController wristPID{0.9,0,0};
     frc::ArmFeedforward feedforward{kS, kG, kV, kA};  

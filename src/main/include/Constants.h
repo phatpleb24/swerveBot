@@ -35,6 +35,6 @@ namespace SwerveConstants
     static constexpr units::inch_t kWheelRadiusInches = 3_in;
     static constexpr int32_t kUnitsPerRevolution = 2048;
     static constexpr double kDriveGearRatio = 6.55;
-    static constexpr double kAngleGearRatio = 12.8;
+    static constexpr double kAngleGearRatio = 10.28;
     static constexpr int k100msPerSecond = 10; 
 };

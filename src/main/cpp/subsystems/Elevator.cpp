@@ -28,7 +28,7 @@ void Elevator::Periodic()
     loop.SetNextR(frc::Vectord<2>{lastProfiledReference.position.value(), lastProfiledReference.velocity.value()});
     loop.Correct(frc::Vectord<1>{Conversions::NativeUnitsToDistanceMeters(leftMotor.GetSelectedSensorPosition(), kGearRatio, kDrumRadius).value()});
     loop.Predict(20_ms);
-    leftMotor.SetVoltage(units::volt_t{loop.U(0)});
+    //leftMotor.SetVoltage(units::volt_t{loop.U(0)});
 }
 
 void Elevator::reset()
