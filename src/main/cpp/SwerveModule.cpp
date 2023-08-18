@@ -3,7 +3,10 @@
 #include "SwerveModule.h"
 #include "Conversions.h"
 
-SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular) : driveMotor(driveChannel), turnMotor(turnChannel), turnFeedforward(kSAngular, kVAngular)
+SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular) 
+: driveMotor(driveChannel)
+, turnMotor(turnChannel)
+, turnFeedforward(kSAngular, kVAngular)
 {
     turnPID.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
     driveMotor.ConfigFactoryDefault();
@@ -35,7 +38,9 @@ frc::SwerveModuleState SwerveModule::getState()
 void SwerveModule::setDesiredState(const frc::SwerveModuleState& referenceState)
 {
     auto state = frc::SwerveModuleState::Optimize(referenceState, Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio));
-    auto drivePIDOutput = drivePID.Calculate(Conversions::NativeUnitstoVelocityMPS(driveMotor.GetSelectedSensorVelocity(), SwerveConstants::kDriveGearRatio, SwerveConstants::kWheelRadiusInches).value(), state.speed.value());
+    auto drivePIDOutput = drivePID.Calculate(
+        Conversions::NativeUnitstoVelocityMPS(driveMotor.GetSelectedSensorVelocity(), 
+        SwerveConstants::kDriveGearRatio, SwerveConstants::kWheelRadiusInches).value(), state.speed.value());
     auto driveFeedForwardOutput = driveFeedforward.Calculate(state.speed);
     auto turnPIDOutput = turnPID.Calculate(Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio), state.angle.Radians());
     auto turnFeedForwardOutput = turnFeedforward.Calculate(turnPID.GetSetpoint().velocity);

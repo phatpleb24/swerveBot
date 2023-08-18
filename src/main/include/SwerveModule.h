@@ -8,7 +8,6 @@
 #include <ctre/Phoenix.h>
 #include <units/length.h>
 #include <units/angle.h>
-#include <unistd.h>
 
 using angularVelocity = units::compound_unit<units::radians, units::inverse<units::seconds>>;
 using angularAcceleration = units::compound_unit<angularVelocity, units::inverse<units::seconds>>;
@@ -29,7 +28,6 @@ class SwerveModule
       std::numbers::pi * 2_rad / 1_s / 1_s;  // radians per second^2
 
     void resetEncoder();
-
     
     private:
     WPI_TalonFX driveMotor;
@@ -38,6 +36,5 @@ class SwerveModule
     frc::ProfiledPIDController<units::radians> turnPID{0.1,0,0, {kMaxAngularVelocity, kMaxAngularAcceleration}};
     frc::SimpleMotorFeedforward<units::meters> driveFeedforward{0.5_V, 3_V/1_mps}; //ks kv
     frc::SimpleMotorFeedforward<units::radians> turnFeedforward; //ksangle kvangle
-
 
 };

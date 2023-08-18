@@ -6,7 +6,6 @@ Intake::Intake()
     wristMotor.ConfigFactoryDefault();
     wristMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor);
     wristMotor.SetSelectedSensorPosition(0);
-    
 
 }
 
@@ -34,5 +33,5 @@ void Intake::Periodic()
 {
     double PIDout = wristPID.Calculate(Conversions::NativeUnitsToDegrees(wristMotor.GetSelectedSensorPosition(), gearRatio).value(), setPoint.value());
     units::volt_t feedforwardOut = feedforward.Calculate(setPoint, 0_rad / 1_s);
-    wristMotor.SetVoltage(units::volt_t{PIDout} + feedforwardOut);
+    //wristMotor.SetVoltage(units::volt_t{PIDout} + feedforwardOut);
 }
