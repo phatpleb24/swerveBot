@@ -3,15 +3,15 @@
 #include "SwerveModule.h"
 #include "Conversions.h"
 
-SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular) 
+SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert) 
 : driveMotor(driveChannel)
 , turnMotor(turnChannel)
 , turnFeedforward(kSAngular, kVAngular)
 {
+    turnPID.Reset(Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio));
     turnPID.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
     driveMotor.ConfigFactoryDefault();
     turnMotor.ConfigFactoryDefault();
-
 
   /*m_rightFrontMotor.SetInverted(DriveConstants::kRightDirection);
   m_rightFollowerMotor.SetInverted(DriveConstants::kRightDirection);
@@ -21,7 +21,24 @@ SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAn
     driveMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor);
     driveMotor.SetSelectedSensorPosition(0);
     turnMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor);
-     turnMotor.SetSelectedSensorPosition(0);
+    turnMotor.SetSelectedSensorPosition(0);
+
+    driveMotor.SetInverted(invert);
+    turnMotor.SetInverted(TalonFXInvertType::Clockwise);
+
+    turnMotor.ConfigNominalOutputForward(0);
+    turnMotor.ConfigNominalOutputReverse(0);
+    turnMotor.ConfigPeakOutputForward(1);
+    turnMotor.ConfigPeakOutputReverse(-1);
+
+    turnMotor.Config_kP(0, 0.3);
+    turnMotor.Config_kD(0, 0);
+    turnMotor.Config_kI(0, 0);
+    turnMotor.Config_kF(0,0);
+    turnMotor.ConfigNeutralDeadband(0.05);
+    turnMotor.SelectProfileSlot(0,0);
+    turnMotor.SetStatusFramePeriod(StatusFrame::Status_1_General_, 99);
+    turnMotor.SetStatusFramePeriod(StatusFrame::Status_2_Feedback0_, 15);
 
 }
 
@@ -42,11 +59,12 @@ void SwerveModule::setDesiredState(const frc::SwerveModuleState& referenceState)
         Conversions::NativeUnitstoVelocityMPS(driveMotor.GetSelectedSensorVelocity(), 
         SwerveConstants::kDriveGearRatio, SwerveConstants::kWheelRadiusInches).value(), state.speed.value());
     auto driveFeedForwardOutput = driveFeedforward.Calculate(state.speed);
-    auto turnPIDOutput = turnPID.Calculate(Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio), state.angle.Radians());
-    auto turnFeedForwardOutput = turnFeedforward.Calculate(turnPID.GetSetpoint().velocity);
+    //auto turnPIDOutput = turnPID.Calculate(Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio), state.angle.Radians());
+    //auto turnFeedForwardOutput = turnFeedforward.Calculate(turnPID.GetSetpoint().velocity);
 
     driveMotor.SetVoltage(units::volt_t{drivePIDOutput} + driveFeedForwardOutput);
-    turnMotor.SetVoltage(units::volt_t{turnPIDOutput} + turnFeedForwardOutput);
+    turnMotor.Set(TalonFXControlMode::Position, Conversions::DegreesToNativeUnits(state.angle.Degrees(), SwerveConstants::kAngleGearRatio));
+    
 }
 
 void SwerveModule::resetEncoder()

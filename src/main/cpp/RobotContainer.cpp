@@ -15,7 +15,7 @@ RobotContainer::RobotContainer() {
     [this]
     {
       if(controller.GetLeftStickButtonPressed()) swerve.fieldRelative = !swerve.fieldRelative;
-      auto xSpeed = -swerve.m_xspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetLeftY(), 0.05),-0.2, 0.2) /** swerve.kMaxSpeed.value()*/);
+      auto xSpeed = swerve.m_xspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetLeftY(), 0.05),-0.2, 0.2) /** swerve.kMaxSpeed.value()*/);
       auto ySpeed = swerve.m_yspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetLeftX(), 0.05), -0.2,0.2) /** swerve.kMaxSpeed.value()*/);
       auto rotSpeed = swerve.m_rotLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetRightX(), 0.05),-0.2,  0.2) /** swerve.kMaxAngularSpeed.value()*/);
       swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, swerve.fieldRelative);
