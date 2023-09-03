@@ -1,5 +1,6 @@
 #pragma once
 #include <numbers>
+#include <frc/geometry/Rotation2d.h>
 #include <frc/controller/PIDController.h>
 #include <frc/controller/ProfiledPIDController.h>
 #include <frc/controller/SimpleMotorFeedforward.h>
@@ -16,7 +17,7 @@ using kaA_unit = units::compound_unit<units::volts, units::inverse<angularAccele
 class SwerveModule
 {
     public:
-    SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert);
+    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert);
     frc::SwerveModuleState getState();
     frc::SwerveModulePosition getPosition();
     double getTurnEncoderCnt();
@@ -26,12 +27,16 @@ class SwerveModule
       std::numbers::pi * 1_rad / 1_s;  // radians per second
     static constexpr auto kMaxAngularAcceleration =
       std::numbers::pi * 2_rad / 1_s / 1_s;  // radians per second^2
+    double getCanCoder();
+    CANCoderConfiguration CANCoderConfig;
+    void configAngleEncoder();
 
     void resetEncoder();
     
     private:
     WPI_TalonFX driveMotor;
     WPI_TalonFX turnMotor;
+    CANCoder angleEncoder;
     TalonFXConfiguration turnConfig;
     frc2::PIDController drivePID{0.5,0,0};
     frc::ProfiledPIDController<units::radians> turnPID{0.1,0,0, {kMaxAngularVelocity, kMaxAngularAcceleration}};

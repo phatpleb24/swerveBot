@@ -3,9 +3,10 @@
 #include "SwerveModule.h"
 #include "Conversions.h"
 
-SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert) 
+SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert) 
 : driveMotor(driveChannel)
 , turnMotor(turnChannel)
+, angleEncoder(encoderChannel)
 , turnFeedforward(kSAngular, kVAngular)
 {
     turnPID.Reset(Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio));
@@ -40,6 +41,9 @@ SwerveModule::SwerveModule(int driveChannel, int turnChannel, units::volt_t kSAn
     turnMotor.SetStatusFramePeriod(StatusFrame::Status_1_General_, 99);
     turnMotor.SetStatusFramePeriod(StatusFrame::Status_2_Feedback0_, 15);
 
+    angleEncoder.ConfigAbsoluteSensorRange(AbsoluteSensorRange(Unsigned_0_to_360));
+    angleEncoder.ConfigSensorDirection(false);
+    angleEncoder.ConfigSensorInitializationStrategy(SensorInitializationStrategy(BootToAbsolutePosition));
 }
 
 frc::SwerveModulePosition SwerveModule::getPosition()
@@ -70,6 +74,15 @@ void SwerveModule::setDesiredState(const frc::SwerveModuleState& referenceState)
 void SwerveModule::resetEncoder()
 {
     driveMotor.SetSelectedSensorPosition(0);
+}
+
+double SwerveModule::getCanCoder(){
+    return angleEncoder.GetAbsolutePosition();
+}
+
+void SwerveModule::configAngleEncoder(){        
+    angleEncoder.ConfigFactoryDefault();
+    angleEncoder.ConfigAllSettings(CANCoderConfig);
 }
 
 double SwerveModule::getTurnEncoderCnt()
