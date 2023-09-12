@@ -1,5 +1,3 @@
-
-
 #include "SwerveModule.h"
 #include "Conversions.h"
 
@@ -79,6 +77,11 @@ void SwerveModule::resetEncoder()
 double SwerveModule::getCanCoder(){
     return angleEncoder.GetAbsolutePosition();
 }
+
+/*void SwerveModule::resetToAbsolute(){
+    double absolutePosition = Conversions::DegreesToNativeUnits(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio);
+    mAngleMotor.setSelectedSensorPosition(absolutePosition);
+}*/
 
 void SwerveModule::configAngleEncoder(){        
     angleEncoder.ConfigFactoryDefault();

@@ -29,7 +29,7 @@ RobotContainer::RobotContainer() {
       {
         elevator.setState(Elevator::kRaisedPosition);
       }
-      else
+      else if (controller.GetBButton())
       {
         elevator.setState(Elevator::kLoweredPosition);
       }
@@ -41,17 +41,17 @@ RobotContainer::RobotContainer() {
     {
       if(controller.GetYButton())
       {
-        intake.wristSetPoint(std::max<units::degree_t>(intake.getPoint()+5_deg, intake.maxRange));
+        intake.wristSetPoint(std::min<units::degree_t>(intake.getPoint()+5_deg, intake.maxRange));
       }
       else if(controller.GetXButton()){
-        intake.wristSetPoint(std::min<units::degree_t>(intake.getPoint()-5_deg, intake.minRange));
+        intake.wristSetPoint(std::max<units::degree_t>(intake.getPoint()-5_deg, intake.minRange));
       }
 
       if(controller.GetLeftBumper()){
-        intake.intakeSpin(1);
+        intake.intakeSpin(3);
       }
       else if(controller.GetRightBumper()){
-        intake.intakeSpin(-1);
+        intake.intakeSpin(-3);
       }
       else{
         intake.intakeSpin(0);

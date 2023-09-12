@@ -6,6 +6,7 @@
 #include <ctre/Phoenix.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/geometry/Translation2d.h>
+#include <frc/geometry/Rotation2d.h>
 #include <units/angular_velocity.h>
 
 namespace SwerveConstants
@@ -18,10 +19,11 @@ namespace SwerveConstants
     const int rightFrontTurn = 9;
     const int rightBackDrive = 3;
     const int rightBackTurn = 1;
-    const int CANCoder1;
-    const int CANCoder2;
-    const int CANCoder3;
-    const int CANCoder4;
+    const int CANCoder1 = 12;
+    const int CANCoder2 = 13;
+    const int CANCoder3 = 14;
+    const int CANCoder4 = 15;
+    //static constexpr frc::Rotation2d angleOffset = frc::Rotation2d(units::angle::degree_t 0.0);
     constexpr units::volt_t kS = 0.14643_V;
     constexpr auto kV = 1.8676 * 1_V / 1_mps;
     constexpr auto kA = 0.46219 * 1_V / 1_mps_sq;

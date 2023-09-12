@@ -49,10 +49,10 @@ class Drivetrain : public frc2::SubsystemBase
 
     private:
     WPI_Pigeon2 gyro{0};
-    SwerveModule leftFront{sc::leftFrontDrive, sc::leftFrontTurn, 0.012_V, 0.7_V/1_rad_per_s, false};
-    SwerveModule leftBack{sc::leftBackDrive, sc::leftBackTurn, 0.012_V, 0.7_V/1_rad_per_s, false};
-    SwerveModule rightFront{sc::rightFrontDrive, sc::rightFrontTurn, 0.012_V, 0.7_V/1_rad_per_s, true};
-    SwerveModule rightBack{sc::rightBackDrive,sc::rightBackTurn, sc::RBkSAngular, sc::RBkVAngular, true};
+    SwerveModule leftFront{sc::leftFrontDrive, sc::leftFrontTurn, sc::CANCoder1, 0.012_V, 0.7_V/1_rad_per_s, false};
+    SwerveModule leftBack{sc::leftBackDrive, sc::leftBackTurn, sc::CANCoder2, 0.012_V, 0.7_V/1_rad_per_s, false};
+    SwerveModule rightFront{sc::rightFrontDrive, sc::rightFrontTurn, sc::CANCoder3, 0.012_V, 0.7_V/1_rad_per_s, true};
+    SwerveModule rightBack{sc::rightBackDrive,sc::rightBackTurn, sc::CANCoder4, sc::RBkSAngular, sc::RBkVAngular, true};
 
     frc::SwerveDriveOdometry<4> odometry{SwerveConstants::kinematics, gyro.GetRotation2d(), {leftFront.getPosition(), rightFront.getPosition(), leftBack.getPosition(), rightBack.getPosition()}};
 };

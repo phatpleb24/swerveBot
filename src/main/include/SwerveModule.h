@@ -27,6 +27,7 @@ class SwerveModule
       std::numbers::pi * 1_rad / 1_s;  // radians per second
     static constexpr auto kMaxAngularAcceleration =
       std::numbers::pi * 2_rad / 1_s / 1_s;  // radians per second^2
+    void resetToAbsolute();
     double getCanCoder();
     CANCoderConfiguration CANCoderConfig;
     void configAngleEncoder();

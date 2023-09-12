@@ -1,0 +1,9 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Elevator": "Mechanism2d",
+      "/SmartDashboard/Field": "Field2d"
+    }
+  }
+}

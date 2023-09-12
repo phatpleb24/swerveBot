@@ -13,13 +13,13 @@
 class Intake : public frc2::SubsystemBase
 {
     public:
-    units::degree_t maxRange = 120_deg;
-    units::degree_t minRange = 0_deg;
-    static constexpr auto kS = 1_V;
-    static constexpr auto kG = 1_V;
-    static constexpr auto kV = 1_V * 1_s / 1_rad;
-    static constexpr auto kA = 1_V * 1_s * 1_s / 1_rad;
-    static constexpr double gearRatio = 5;
+    units::degree_t maxRange = 60_deg;
+    units::degree_t minRange = 30_deg;
+    static constexpr auto kS = 0_V;
+    static constexpr auto kG = 0.72_V;
+    static constexpr auto kV = 0.48_V * 1_s / 1_rad;
+    static constexpr auto kA = 0.02_V * 1_s * 1_s / 1_rad;
+    static constexpr double gearRatio = 27;
     Intake();
 
     void Periodic() override;
@@ -35,8 +35,8 @@ class Intake : public frc2::SubsystemBase
     private:
     units::degree_t setPoint = 0_deg;
 
-    WPI_TalonFX intakeMotor{0};
-    WPI_TalonFX wristMotor{11};
+    WPI_TalonFX intakeMotor{11};
+    WPI_TalonFX wristMotor{0};
 
     frc::PIDController wristPID{0.9,0,0};
     frc::ArmFeedforward feedforward{kS, kG, kV, kA};  
