@@ -18,10 +18,10 @@ namespace SwerveConstants
     const int rightFrontTurn = 9;
     const int rightBackDrive = 3;
     const int rightBackTurn = 1;
-    const int CANCoder1;
-    const int CANCoder2;
-    const int CANCoder3;
-    const int CANCoder4;
+    const int CANCoderLF = 12;
+    const int CANCoderLB = 14;
+    const int CANCoderRF = 13;
+    const int CANCoderRB = 15;
     constexpr units::volt_t kS = 0.14643_V;
     constexpr auto kV = 1.8676 * 1_V / 1_mps;
     constexpr auto kA = 0.46219 * 1_V / 1_mps_sq;

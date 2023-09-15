@@ -10,14 +10,10 @@
 #include <units/length.h>
 #include <units/angle.h>
 
-using angularVelocity = units::compound_unit<units::radians, units::inverse<units::seconds>>;
-using angularAcceleration = units::compound_unit<angularVelocity, units::inverse<units::seconds>>;
-using kvA_unit = units::compound_unit<units::volts, units::inverse<angularVelocity>>;
-using kaA_unit = units::compound_unit<units::volts, units::inverse<angularAcceleration>>;
 class SwerveModule
 {
     public:
-    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert);
+    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, bool invert);
     frc::SwerveModuleState getState();
     frc::SwerveModulePosition getPosition();
     double getTurnEncoderCnt();
@@ -39,8 +35,6 @@ class SwerveModule
     CANCoder angleEncoder;
     TalonFXConfiguration turnConfig;
     frc2::PIDController drivePID{0.5,0,0};
-    frc::ProfiledPIDController<units::radians> turnPID{0.1,0,0, {kMaxAngularVelocity, kMaxAngularAcceleration}};
     frc::SimpleMotorFeedforward<units::meters> driveFeedforward{0.5_V, 3_V/1_mps}; //ks kv
-    frc::SimpleMotorFeedforward<units::radians> turnFeedforward; //ksangle kvangle
 
 };

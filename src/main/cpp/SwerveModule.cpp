@@ -3,14 +3,11 @@
 #include "SwerveModule.h"
 #include "Conversions.h"
 
-SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel, units::volt_t kSAngular, units::unit_t<kvA_unit> kVAngular, bool invert) 
+SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel, bool invert) 
 : driveMotor(driveChannel)
 , turnMotor(turnChannel)
 , angleEncoder(encoderChannel)
-, turnFeedforward(kSAngular, kVAngular)
 {
-    turnPID.Reset(Conversions::NativeUnitsToDegrees(turnMotor.GetSelectedSensorPosition(), SwerveConstants::kAngleGearRatio));
-    turnPID.EnableContinuousInput(-units::radian_t{std::numbers::pi}, units::radian_t{std::numbers::pi});
     driveMotor.ConfigFactoryDefault();
     turnMotor.ConfigFactoryDefault();
 
