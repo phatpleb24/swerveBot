@@ -6,6 +6,7 @@
 #include <ctre/Phoenix.h>
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/geometry/Translation2d.h>
+#include <frc/geometry/Rotation2d.h>
 #include <units/angular_velocity.h>
 
 namespace SwerveConstants

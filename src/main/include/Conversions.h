@@ -2,6 +2,7 @@
 
 #include <numbers>
 #include <units/length.h>
+#include <frc/geometry/Rotation2d.h>
 #include "Constants.h"
 
 #define sc SwerveConstants
@@ -52,5 +53,16 @@ namespace Conversions
         auto velocity = wheelRotationPerSecond * (2 * std::numbers::pi * wheelRadiusInches);
         return velocity;
     }
+    static double CANcoderToDegrees(double positionCounts, double gearRatio) {
+        return positionCounts * (360.0 / (gearRatio * 4096.0));
+    }
 
+    /**
+     * @param degrees Degrees of rotation of Mechanism
+     * @param gearRatio Gear Ratio between CANCoder and Mechanism
+     * @return CANCoder Position Counts
+     */
+    static double degreesToCANcoder(double degrees, double gearRatio) {
+        return degrees / (360.0 / (gearRatio * 4096.0));
+    }
 }
