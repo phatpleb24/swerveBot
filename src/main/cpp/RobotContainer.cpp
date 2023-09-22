@@ -41,10 +41,10 @@ RobotContainer::RobotContainer() {
     {
       if(controller.GetYButton())
       {
-        intake.wristSetPoint(std::min<units::degree_t>(intake.getPoint()+5_deg, intake.maxRange));
+        intake.moveWrist(60_deg);
       }
       else if(controller.GetXButton()){
-        intake.wristSetPoint(std::max<units::degree_t>(intake.getPoint()-5_deg, intake.minRange));
+        intake.moveWrist(0_deg);
       }
 
       if(controller.GetLeftBumper()){

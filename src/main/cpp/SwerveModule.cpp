@@ -1,11 +1,12 @@
 #include "SwerveModule.h"
 #include "Conversions.h"
 
-SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel, bool invert) 
+SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel, int offset, bool invert) 
 : driveMotor(driveChannel)
 , turnMotor(turnChannel)
 , angleEncoder(encoderChannel)
 {
+    angleOffset = offset;
     driveMotor.ConfigFactoryDefault();
     turnMotor.ConfigFactoryDefault();
 
@@ -26,7 +27,7 @@ SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel
     turnMotor.ConfigNominalOutputReverse(0);
     turnMotor.ConfigPeakOutputForward(1);
     turnMotor.ConfigPeakOutputReverse(-1);
-
+    turnMotor.SetNeutralMode(Brake);
     turnMotor.Config_kP(0, 0.3);
     turnMotor.Config_kD(0, 0);
     turnMotor.Config_kI(0, 0);
@@ -37,8 +38,10 @@ SwerveModule::SwerveModule(int driveChannel, int turnChannel, int encoderChannel
     turnMotor.SetStatusFramePeriod(StatusFrame::Status_2_Feedback0_, 15);
 
     angleEncoder.ConfigAbsoluteSensorRange(AbsoluteSensorRange(Unsigned_0_to_360));
-    angleEncoder.ConfigSensorDirection(false);
+    angleEncoder.ConfigSensorDirection(true);
     angleEncoder.ConfigSensorInitializationStrategy(SensorInitializationStrategy(BootToAbsolutePosition));
+
+    resetToAbsolute();
 }
 
 frc::SwerveModulePosition SwerveModule::getPosition()
@@ -75,10 +78,10 @@ double SwerveModule::getCanCoder(){
     return angleEncoder.GetAbsolutePosition();
 }
 
-/*void SwerveModule::resetToAbsolute(){
-    double absolutePosition = Conversions::DegreesToNativeUnits(getCanCoder().getDegrees() - angleOffset.getDegrees(), Constants.Swerve.angleGearRatio);
-    mAngleMotor.setSelectedSensorPosition(absolutePosition);
-}*/
+void SwerveModule::resetToAbsolute(){
+    double absolutePosition = Conversions::DegreesToNativeUnits(units::degree_t{getCanCoder() - angleOffset}, SwerveConstants::kAngleGearRatio);
+    turnMotor.SetSelectedSensorPosition(absolutePosition);
+}
 
 void SwerveModule::configAngleEncoder(){        
     angleEncoder.ConfigFactoryDefault();

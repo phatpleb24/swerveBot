@@ -23,6 +23,10 @@ namespace SwerveConstants
     const int CANCoderLB = 14;
     const int CANCoderRF = 13;
     const int CANCoderRB = 15;
+    const int angleOffsetLF = 190.37;
+    const int angleOffsetLB = 299.09;
+    const int angleOffsetRB = 10.55;
+    const int angleOffsetRF = 318.25;
     constexpr units::volt_t kS = 0.14643_V;
     constexpr auto kV = 1.8676 * 1_V / 1_mps;
     constexpr auto kA = 0.46219 * 1_V / 1_mps_sq;

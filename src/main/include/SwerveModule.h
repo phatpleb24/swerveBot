@@ -13,7 +13,7 @@
 class SwerveModule
 {
     public:
-    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, bool invert);
+    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, int angleOffset, bool invert);
     frc::SwerveModuleState getState();
     frc::SwerveModulePosition getPosition();
     double getTurnEncoderCnt();
@@ -31,6 +31,7 @@ class SwerveModule
     void resetEncoder();
     
     private:
+    double angleOffset;
     WPI_TalonFX driveMotor;
     WPI_TalonFX turnMotor;
     CANCoder angleEncoder;

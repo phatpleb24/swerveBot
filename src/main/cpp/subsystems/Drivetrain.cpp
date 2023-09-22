@@ -73,5 +73,9 @@ void Drivetrain::Periodic()
     frc::SmartDashboard::PutNumber("Right Back Raw", rightBack.getTurnEncoderCnt());
     frc::SmartDashboard::PutNumber("Right Back Deg Falcon", rightBack.getDegrees());
     frc::SmartDashboard::PutBoolean("Field Relative", fieldRelative);
+    frc::SmartDashboard::PutNumber("LFCoder", leftFront.getCanCoder());
+    frc::SmartDashboard::PutNumber("LBCoder", leftBack.getCanCoder());
+    frc::SmartDashboard::PutNumber("RFCoder", rightFront.getCanCoder());
+    frc::SmartDashboard::PutNumber("RBCoder", rightBack.getCanCoder());
     //printf("Right Back Deg: %f\n", rightBack.getPosition().angle.Degrees().value());
 }
