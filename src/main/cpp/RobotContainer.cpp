@@ -41,13 +41,15 @@ RobotContainer::RobotContainer() {
     {
       if(controller.GetYButton())
       {
-        intake.setSetpoint(60_deg);
+        intake.setSetpoint(90_deg);
+        intake.moveWrist(90_deg);
       }
-      else if(controller.GetXButton()){
+      else if(controller.GetXButton())
+      {
         intake.setSetpoint(0_deg);
+        intake.moveWrist(0_deg);      
       }
-      intake.moveWrist();
-
+      
       if(controller.GetLeftBumper()){
         intake.intakeSpin(3);
       }

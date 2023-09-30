@@ -47,3 +47,9 @@ namespace SwerveConstants
     static constexpr double kAngleGearRatio = 10.28;
     static constexpr int k100msPerSecond = 10; 
 };
+
+namespace WristPositions
+{
+    const double highestPos = 11298;
+    const double lowestPos = 0;
+}

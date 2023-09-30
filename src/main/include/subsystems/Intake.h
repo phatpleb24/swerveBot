@@ -29,7 +29,7 @@ class Intake : public frc2::SubsystemBase
 
     void wristSpin(double x);
 
-    void moveWrist();
+    void moveWrist(units::degree_t x);
 
     void setSetpoint(units::degree_t x);
 
@@ -37,8 +37,8 @@ class Intake : public frc2::SubsystemBase
 
     private:
     units::degree_t setPoint = 0_deg;
-    /*int horizontalPosFalcon = 0;
-    double maxGravityFF = .5;*/
+    int horizontalPosFalcon = 0;
+    double maxGravityFF = .07;
 
     WPI_TalonFX intakeMotor{11};
     WPI_TalonFX wristMotor{0};
