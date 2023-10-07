@@ -26,8 +26,8 @@ RobotContainer::RobotContainer() {
     {
       if(controller.GetLeftStickButtonPressed()) swerve.fieldRelative = !swerve.fieldRelative;
       //old deadband values all 0.05
-      auto xSpeed = swerve.m_xspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetLeftY(), 0.10),-0.4, 0.4) /** swerve.kMaxSpeed.value()*/);
-      auto ySpeed = swerve.m_yspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetLeftX(), 0.10), -0.4,0.4) /** swerve.kMaxSpeed.value()*/);
+      auto xSpeed = swerve.m_xspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(-controller.GetLeftY(), 0.10),-0.4, 0.4) /** swerve.kMaxSpeed.value()*/);
+      auto ySpeed = swerve.m_yspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(-controller.GetLeftX(), 0.10), -0.4,0.4) /** swerve.kMaxSpeed.value()*/);
       //old rot speed values -0.2 - 0.2
       auto rotSpeed = swerve.m_rotLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetRightX(), 0.10),-0.8,  0.8) /** swerve.kMaxAngularSpeed.value()*/);
       swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, swerve.fieldRelative);
@@ -54,13 +54,13 @@ RobotContainer::RobotContainer() {
     {
       if(controller2.GetYButton())
       {
-        intake.setSetpoint(60_deg);
+        intake.setSetpoint(90_deg);
       }
       else if(controller2.GetXButton()){
         intake.setSetpoint(0_deg);
       }
       intake.moveWrist();
-      if(controller2.GetLeftBumperPressed())
+      if(controller2.GetLeftBumper())
       {
         if (intake.intakeState != 1){
           intake.intakeState = 1;
@@ -69,7 +69,7 @@ RobotContainer::RobotContainer() {
           intake.intakeState = 0;
         }
       }
-      else if(controller2.GetRightBumperPressed())
+      else if(controller2.GetRightBumper())
       {
         if (intake.intakeState != -1){
           intake.intakeState = -1;
@@ -124,5 +124,5 @@ void RobotContainer::ConfigureBindings()
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {
   PlacementSequence placeCMD = PlacementSequence(&intake);
-  return std::move(placeCMD);
+  return std::move(placeCMD).ToPtr();
 }
