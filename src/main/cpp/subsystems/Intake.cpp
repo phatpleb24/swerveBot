@@ -5,15 +5,15 @@ Intake::Intake()
     intakeMotor.ConfigFactoryDefault();
     wristMotor.ConfigFactoryDefault();
     wristMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor);
-    wristMotor.SetSelectedSensorPosition(0);
+    wristMotor.SetSelectedSensorPosition(Conversions::DegreesToNativeUnits(75_deg, gearRatio));
     wristMotor.SetInverted(false);
     wristMotor.SetNeutralMode(Brake);
     wristMotor.Config_kD(0, 0);
-    wristMotor.Config_kF(0, 0.05);
+    wristMotor.Config_kF(0, 2.5);
     wristMotor.Config_kI(0, 0);
-    wristMotor.Config_kP(0, 0.3);
-    wristMotor.ConfigMotionCruiseVelocity(100);
-    wristMotor.ConfigMotionAcceleration(30);
+    wristMotor.Config_kP(0, 0.08);
+    wristMotor.ConfigMotionCruiseVelocity(1000);
+    wristMotor.ConfigMotionAcceleration(80);
     //setPoint = 30_deg;
 }
 
@@ -48,9 +48,10 @@ void Intake::Periodic()
     wristMotor.SetVoltage(units::volt_t{PIDout} + feedforwardOut);
     printf("Setpoint: %f\n", setPoint.value());
     printf("Wrist Voltage: %f\n", (units::volt_t{PIDout} + feedforwardOut).value());*/
+    frc::SmartDashboard::PutNumber("Intake state", intakeState);
 }
 
 void Intake::moveWrist()
 {
-    wristMotor.Set(ControlMode::MotionMagic, Conversions::DegreesToNativeUnits(setPoint, gearRatio));
+    //wristMotor.Set(ControlMode::MotionMagic, Conversions::DegreesToNativeUnits(setPoint, gearRatio));
 }

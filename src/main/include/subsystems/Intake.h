@@ -7,7 +7,7 @@
 #include <frc/controller/ArmFeedforward.h> 
 #include <units/angular_velocity.h>
 #include <units/angular_acceleration.h>
-
+#include <frc/smartdashboard/SmartDashboard.h>
 #include "Conversions.h"
 #include "Constants.h"
 
@@ -39,7 +39,7 @@ class Intake : public frc2::SubsystemBase
     units::degree_t getPoint();
 
     private:
-    units::degree_t setPoint = 90_deg;
+    units::degree_t setPoint = 75_deg;
     int horizontalPosFalcon = 0;
     double maxGravityFF = .07;
 
