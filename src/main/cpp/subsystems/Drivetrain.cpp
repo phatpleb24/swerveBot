@@ -65,6 +65,19 @@ frc::Pose2d Drivetrain::getPose()
     return odometry.GetPose();
 }
 
+double Drivetrain::getPitch()
+{
+  return gyro.GetPitch();
+}
+
+double Drivetrain::getRoll()
+{
+  return gyro.GetRoll();
+}
+
+void swerveDriveVolts(){
+    
+}
 void Drivetrain::Periodic()
 {
     updateOdometry();

@@ -6,6 +6,8 @@
 
 #include <frc2/command/Commands.h>
 #include <frc2/command/RunCommand.h>
+#include "commands/PlacementSequence.h"
+#include "commands/Balance.h"
 #include <units/angle.h>
 
 RobotContainer::RobotContainer() {
@@ -25,11 +27,11 @@ RobotContainer::RobotContainer() {
   elevator.SetDefaultCommand(frc2::RunCommand(
     [this]
     {
-      if(controller.GetAButton())
+      if(controller.GetLeftTriggerAxis()>0.1)
       {
         elevator.setState(Elevator::kRaisedPosition);
       }
-      else if (controller.GetBButton())
+      else if (controller.GetRightTriggerAxis()>0.1)
       {
         elevator.setState(Elevator::kLoweredPosition);
       }
@@ -61,6 +63,8 @@ RobotContainer::RobotContainer() {
       }
     }, {&intake}
   ));
+  Balance* balanceCMD = new Balance(&swerve);
+  controller.B().WhileTrue(balanceCMD);
 }
 
 void RobotContainer::ConfigureBindings() 
