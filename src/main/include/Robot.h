@@ -8,6 +8,7 @@
 
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
+#include <frc/smartdashboard/SendableChooser.h>
 
 #include "RobotContainer.h"
 
@@ -29,6 +30,7 @@ class Robot : public frc::TimedRobot {
   void TestExit() override;
 
  private:
+  frc::SendableChooser<frc2::Command*> chooser;
   std::optional<frc2::CommandPtr> m_autonomousCommand;
 
   RobotContainer m_container;

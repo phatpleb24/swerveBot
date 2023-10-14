@@ -24,13 +24,14 @@ class Elevator : public frc2::SubsystemBase
     public:
     Elevator();
 
-    void setState(units::meter_t goalPoint);
+    void setState();
 
-    void SimulationPeriodic() override;
+    void setPos(units::meter_t goalPoint);
 
     void Periodic() override;
 
-    void reset();
+    void voltage();
+
     /* My code
     //void updateElevatorMeters();
 
@@ -48,24 +49,8 @@ class Elevator : public frc2::SubsystemBase
 
     static constexpr units::second_t kDt = 20_ms;
     private:
+    units::meter_t setpoint = 0_m;
+    double gravityFF = .1;
     WPI_TalonFX leftMotor{6};
     WPI_TalonFX rightMotor{10};
-    /*new code
-    //frc::TrapezoidProfile<units::meters>::Constraints constraints{1.5_fps, 1.5_fps_sq};
-    //frc::ProfiledPIDController<units::meters> elevatorPID{1.3, 0.0, 0.7,
-    //                                                     constraints, kDt};
-        //frc::TrapezoidProfile<units::meters>::State lastProfiledReference;*/
-    //old code
-    frc::LinearSystem<2,1,1> elevatorPlant = frc::LinearSystemId::ElevatorSystem(frc::DCMotor::Falcon500(2), kCarriageMass, kDrumRadius, kGearRatio);
-    frc::KalmanFilter<2,1,1> observer{elevatorPlant, {0.0508, 0.5}, {0.001}, 20_ms};
-    frc::LinearQuadraticRegulator<2, 1> controller{elevatorPlant, {0.0254, 0.254}, {12}, 20_ms};
-    frc::LinearSystemLoop<2,1,1> loop{elevatorPlant, controller, observer, 12_V, 20_ms};
-    frc::TrapezoidProfile<units::meters>::Constraints constraints{1.5_fps, 1.5_fps_sq};
-    frc::TrapezoidProfile<units::meters>::State lastProfiledReference;
-
-    TalonFXSimCollection motorSim = leftMotor.GetSimCollection();
-    frc::sim::ElevatorSim elevatorSim{frc::DCMotor::Falcon500(2), kGearRatio, kCarriageMass, kDrumRadius, kLoweredPosition, kRaisedPosition, true, {0.01}};
-    frc::Mechanism2d mech2d{20,50};
-    frc::MechanismRoot2d* elevatorRoot = mech2d.GetRoot("Elevator Root", 10, 0);
-    frc::MechanismLigament2d* elevatorMech2d = elevatorRoot->Append<frc::MechanismLigament2d>("Elevator", units::inch_t{elevatorSim.GetPosition()}.value(), 90_deg);
 };

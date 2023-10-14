@@ -4,9 +4,21 @@
 
 #include "Robot.h"
 
+#include <frc/DataLogManager.h>
 #include <frc2/command/CommandScheduler.h>
 
-void Robot::RobotInit() {}
+void Robot::RobotInit() {
+  SetNetworkTablesFlushEnabled(true);
+  
+  frc::DataLogManager::Start();
+
+  
+  // chooser.SetDefaultOption("Place Only", place.get());
+  // chooser.AddOption("Left", leftCMD.get());
+  // chooser.AddOption("Right", rightCMD.get());
+  // chooser.AddOption("Mid", midCMD.get());
+  // frc::SmartDashboard::PutData("Auto Modes", &chooser);
+}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
