@@ -10,7 +10,7 @@ void Balance::Initialize()
 {
     printf("Balance Init\n");
     maxPitch = 15;
-    maxSpeed = 1.7;
+    maxSpeed = 1;
     pitchTolerance = 0.5;
     balanceDuration = 2;
     timerStarted = false;
@@ -20,10 +20,7 @@ void Balance::Initialize()
 
 void Balance::Execute()
 {
-    units::meters_per_second_t xSpeed = (units::meters_per_second_t)2;
-    units::meters_per_second_t ySpeed = (units::meters_per_second_t)0;
-    units::degrees_per_second_t rotSpeed = (units::degrees_per_second_t)0;
-    if(swerve->getPitch() > 3)
+    /*if(swerve->getPitch() > 3)
     {
         swerve->Drive(xSpeed, ySpeed, rotSpeed, true);
     }
@@ -31,7 +28,19 @@ void Balance::Execute()
     {
         swerve->Drive(-xSpeed, ySpeed, rotSpeed, true);
     }
-    else swerve->Drive(ySpeed, ySpeed, rotSpeed, true);
+    else swerve->Drive(ySpeed, ySpeed, rotSpeed, true);*/
+
+    
+    double localTimestamp = frc::Timer::GetFPGATimestamp().value();
+    if(localTimestamp - debugTimestamp > 1)
+    {
+        //printf("Execute %0.3f\n", localTimestamp);
+        debugTimestamp = localTimestamp;
+    }
+    double roll = swerve->getRoll();
+    double speed = std::max(-maxSpeed, std::min(maxSpeed, maxSpeed * (roll - levelAngle) / maxPitch));
+    //printf("Volts %.03f Roll %0.3f\n", voltage, roll);
+    swerve->Drive(units::meters_per_second_t{1}, 0_mps, 0_deg_per_s, false);
 }
 
 bool Balance::IsFinished()
