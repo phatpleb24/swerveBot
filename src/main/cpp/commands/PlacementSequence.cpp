@@ -1,5 +1,3 @@
-<<<<<<< Updated upstream
-=======
 #include "commands/PlacementSequence.h"
 #include <frc/Timer.h>
 
@@ -41,7 +39,6 @@ bool PlacementSequence::IsFinished()
     //return intake->getEncoderValue() >= position + 0.1;
     return frc::Timer::GetFPGATimestamp().value() - startTime >= 2;
 }
->>>>>>> Stashed changes
 
 void PlacementSequence::End(bool interrupted)
 {

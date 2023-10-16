@@ -46,20 +46,12 @@ RobotContainer::RobotContainer() {
   elevator.SetDefaultCommand(frc2::RunCommand(
     [this]
     {
-<<<<<<< Updated upstream
-      if(controller.GetAButton())
-=======
       if(controller2.GetAButtonPressed())
->>>>>>> Stashed changes
       {
         elevator.voltage();
         //elevator.setPos(27_in);
       }
-<<<<<<< Updated upstream
-      else if (controller.GetBButton())
-=======
       else if(controller2.GetBButtonPressed())
->>>>>>> Stashed changes
       {
         elevator.setPos(0_m);
       }

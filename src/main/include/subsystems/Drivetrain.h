@@ -44,6 +44,10 @@ class Drivetrain : public frc2::SubsystemBase
 
     void resetOdometry(frc::Pose2d pose);
 
+    double getPitch();
+
+    double getRoll();
+
     frc::Pose2d getPose();
 
     

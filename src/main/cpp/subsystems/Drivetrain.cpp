@@ -85,9 +85,6 @@ double Drivetrain::getRoll()
   return gyro.GetRoll();
 }
 
-void swerveDriveVolts(){
-    
-}
 void Drivetrain::Periodic()
 {
     updateOdometry();
