@@ -22,7 +22,7 @@ void Balance::Execute()
 {
     units::meters_per_second_t xSpeed = (units::meters_per_second_t)2;
     units::meters_per_second_t ySpeed = (units::meters_per_second_t)0;
-    units::meters_per_second_t rotSpeed = (units::meters_per_second_t)0;
+    units::degrees_per_second_t rotSpeed = (units::degrees_per_second_t)0;
     if(swerve->getPitch() > 3)
     {
         swerve->Drive(xSpeed, ySpeed, rotSpeed, true);
@@ -33,6 +33,7 @@ void Balance::Execute()
     }
     else swerve->Drive(ySpeed, ySpeed, rotSpeed, true);
 }
+
 bool Balance::IsFinished()
 {
     double localTimestamp = frc::Timer::GetFPGATimestamp().value();
