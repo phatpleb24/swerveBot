@@ -38,19 +38,18 @@ class Elevator : public frc2::SubsystemBase
     //void updateSmartDashboard();
     */
 
-    static constexpr units::meter_t kRaisedPosition = -50_in;
-    static constexpr units::meter_t kMidPosition = 1_ft;
+    static constexpr units::meter_t kRaisedPosition = 54_in;
     static constexpr units::meter_t kLoweredPosition = 0_ft;
 
-    static constexpr units::meter_t kDrumRadius = 0.75_in;
-    static constexpr units::kilogram_t kCarriageMass = 4.5_kg;
-    static constexpr double kGearRatio = 6.0;
+    static constexpr units::meter_t kDrumRadius = 2.049_in;
+    static constexpr units::kilogram_t kCarriageMass = 35_kg;
+    static constexpr double kGearRatio = 5.0;
     //static units::meter_t elevatorSetpointMeters;
 
     static constexpr units::second_t kDt = 20_ms;
     private:
     units::meter_t setpoint = 0_m;
-    double gravityFF = .1;
+    double gravityFF = .6;
     WPI_TalonFX leftMotor{6};
     WPI_TalonFX rightMotor{10};
 };

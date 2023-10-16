@@ -28,13 +28,17 @@ class Drivetrain : public frc2::SubsystemBase
     static constexpr units::inch_t kWhellRadiusInches = 3_in;
     static constexpr int k100msPerSecond = 10;
     static constexpr units::meters_per_second_t kMaxSpeed = 5_mps;
-    static constexpr auto kMaxAngularSpeed = 2_rad / 1_s;
+    static constexpr auto kMaxAngularSpeed = 3_rad / 1_s;
     frc::Field2d m_field;
     bool fieldRelative;
 
     void Periodic() override;
 
     void updateOdometry();
+
+    void driveFieldRelative(frc::ChassisSpeeds speeds);
+
+    frc::ChassisSpeeds robotRelativeSpeeds();
 
     void Drive(units::meters_per_second_t x_speed, units::meters_per_second_t y_speed, units::degrees_per_second_t rot_speed, bool fieldRelative);
 
@@ -54,5 +58,8 @@ class Drivetrain : public frc2::SubsystemBase
     SwerveModule rightFront{sc::rightFrontDrive, sc::rightFrontTurn, sc::CANCoderRF, sc::angleOffsetRF, false};
     SwerveModule rightBack{sc::rightBackDrive,sc::rightBackTurn, sc::CANCoderRB, sc::angleOffsetRB, false};
 
+
+
+    //pathplanner::PPHolonomicDriveController swerveDriveController{};
     frc::SwerveDriveOdometry<4> odometry{SwerveConstants::kinematics, gyro.GetRotation2d(), {leftFront.getPosition(), rightFront.getPosition(), leftBack.getPosition(), rightBack.getPosition()}};
 };

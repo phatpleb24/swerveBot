@@ -9,25 +9,31 @@ Elevator::Elevator()
     leftMotor.ConfigFactoryDefault();
     rightMotor.ConfigFactoryDefault();
     //rightMotor.Follow(leftMotor);
-    rightMotor.Follow(leftMotor);
+    rightMotor.Follow(leftMotor, FollowerType_PercentOutput);
     leftMotor.ConfigSelectedFeedbackSensor(FeedbackDevice::IntegratedSensor);
     leftMotor.SetSelectedSensorPosition(0);
     leftMotor.Config_kP(0,0);
-    leftMotor.Config_kF(0,0);
+    leftMotor.Config_kF(0,0.5);
     leftMotor.Config_kD(0,0);
     leftMotor.Config_kI(0,0);
-    rightMotor.SetNeutralMode(Coast);
-    rightMotor.SetNeutralMode(Coast);
+    SupplyCurrentLimitConfiguration currentConfig;
+    currentConfig.currentLimit = 80;
+    currentConfig.enable = true;
+    leftMotor.ConfigSupplyCurrentLimit(currentConfig);
+    rightMotor.ConfigSupplyCurrentLimit(currentConfig);
+    rightMotor.SetNeutralMode(Brake);
+    rightMotor.SetNeutralMode(Brake);
     leftMotor.SetInverted(TalonFXInvertType::Clockwise);
     rightMotor.SetInverted(InvertType::OpposeMaster);
     leftMotor.ConfigMotionCruiseVelocity(1500);
     leftMotor.ConfigMotionAcceleration(100);
     leftMotor.SelectProfileSlot(0,0);
+    
 }
 
 void Elevator::setState()
 {
-    //leftMotor.Set(ControlMode::MotionMagic, Conversions::DistanceToNativeUnits(setpoint, kGearRatio, kDrumRadius), DemandType_ArbitraryFeedForward, gravityFF);
+    leftMotor.Set(ControlMode::MotionMagic, Conversions::DistanceToNativeUnits(setpoint, kGearRatio, kDrumRadius), DemandType_ArbitraryFeedForward, gravityFF);
 }
 
 void Elevator::setPos(units::meter_t x)
@@ -42,5 +48,5 @@ void Elevator::Periodic()
 
 void Elevator::voltage()
 {
-    leftMotor.SetVoltage(4_V);
+    leftMotor.SetVoltage(6_V);
 }

@@ -53,5 +53,10 @@ void Intake::Periodic()
 
 void Intake::moveWrist()
 {
-    //wristMotor.Set(ControlMode::MotionMagic, Conversions::DegreesToNativeUnits(setPoint, gearRatio));
+    wristMotor.Set(ControlMode::MotionMagic, Conversions::DegreesToNativeUnits(setPoint, gearRatio));
+}
+
+units::degree_t Intake::getPos()
+{
+    return Conversions::NativeUnitsToDegrees(wristMotor.GetSelectedSensorPosition(), gearRatio);
 }

@@ -19,9 +19,16 @@
 #include "commands/Balance.h"
 #include <units/angle.h>
 #include "commands/PlacementSequence.h"
+#include <pathplanner/lib/commands/PPSwerveControllerCommand.h>
+#include <pathplanner/lib/PathPlannerTrajectory.h>
+#include <pathplanner/lib/PathPlanner.h>
+#include <pathplanner/lib/commands/FollowPathWithEvents.h>
+#include "commands/IntakeDown.h"
 
 RobotContainer::RobotContainer() {
   ConfigureBindings();
+
+  
 
   swerve.SetDefaultCommand(frc2::RunCommand(
     [this]
@@ -31,7 +38,7 @@ RobotContainer::RobotContainer() {
       auto xSpeed = swerve.m_xspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(-controller.GetLeftY(), 0.10),-0.4, 0.4) /** swerve.kMaxSpeed.value()*/);
       auto ySpeed = swerve.m_yspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(-controller.GetLeftX(), 0.10), -0.4,0.4) /** swerve.kMaxSpeed.value()*/);
       //old rot speed values -0.2 - 0.2
-      auto rotSpeed = swerve.m_rotLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetRightX(), 0.10),-0.8,  0.8) /** swerve.kMaxAngularSpeed.value()*/);
+      auto rotSpeed = swerve.m_rotLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetRightX(), 0.10),-1.0,  1.0) /** swerve.kMaxAngularSpeed.value()*/);
       swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, swerve.fieldRelative);
     }, 
     {&swerve}));
@@ -39,14 +46,24 @@ RobotContainer::RobotContainer() {
   elevator.SetDefaultCommand(frc2::RunCommand(
     [this]
     {
+<<<<<<< Updated upstream
       if(controller.GetAButton())
+=======
+      if(controller2.GetAButtonPressed())
+>>>>>>> Stashed changes
       {
-        //elevator.setSetpoint(50_in);
+        elevator.voltage();
+        //elevator.setPos(27_in);
       }
+<<<<<<< Updated upstream
       else if (controller.GetBButton())
+=======
+      else if(controller2.GetBButtonPressed())
+>>>>>>> Stashed changes
       {
-        //elevator.setSetpoint(0_in);
+        elevator.setPos(0_m);
       }
+      //elevator.setState();
       //elevator.raiseElevator();
     }, {&elevator}
   ));
@@ -56,13 +73,13 @@ RobotContainer::RobotContainer() {
     {
       if(controller2.GetYButton())
       {
-        intake.setSetpoint(90_deg);
+        intake.setSetpoint(75_deg);
       }
       else if(controller2.GetXButton()){
         intake.setSetpoint(0_deg);
       }
       intake.moveWrist();
-      if(controller2.GetLeftBumper())
+      if(controller2.GetLeftBumperPressed())
       {
         if (intake.intakeState != 1){
           intake.intakeState = 1;
@@ -71,7 +88,7 @@ RobotContainer::RobotContainer() {
           intake.intakeState = 0;
         }
       }
-      else if(controller2.GetRightBumper())
+      else if(controller2.GetRightBumperPressed())
       {
         if (intake.intakeState != -1){
           intake.intakeState = -1;
@@ -125,8 +142,29 @@ void RobotContainer::ConfigureBindings()
 //   PlacementSequence placeCMD = PlacementSequence(&m_arm);
 //   return std::move(placeCMD).ToPtr();//.AndThen(std::move(ramseteCommand).ToPtr()).AndThen([this] {m_drive.tankDriveVolts(0_V,0_V);}, {&m_drive});
 // }
+
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {
+  eventMap.emplace("intakeDown", std::make_shared<IntakeDown>(&intake));
+  pathplanner::SwerveAutoBuilder swerveAuto
+  {
+    [this]() {return swerve.getPose();},
+    [this](auto initPose) {swerve.resetOdometry(initPose);},
+    pathplanner::PIDConstants(2,0,0),
+    pathplanner::PIDConstants(2,0,0),
+    [this](auto speeds) {swerve.driveFieldRelative(speeds);},
+    eventMap,
+    {&swerve},
+    true
+  };
+  pathplanner::PathPlannerTrajectory traj1 = pathplanner::PathPlanner::loadPath("farLeftBlue", pathplanner::PathConstraints(4_mps, 3_mps_sq));
+  pathplanner::PathPlannerTrajectory traj2 = pathplanner::PathPlanner::loadPath("farLeftBlueReturn", pathplanner::PathConstraints(4_mps, 3_mps_sq));
+  auto moveCMD = swerveAuto.followPathWithEvents(traj1);
+  auto returnCMD = swerveAuto.followPath(traj2);
   PlacementSequence placeCMD = PlacementSequence(&intake);
-  return std::move(placeCMD).ToPtr();
+  return std::move(placeCMD).ToPtr()
+    .AndThen(std::move(moveCMD))
+    .AndThen(std::move(frc2::InstantCommand([this] {intake.intakeSpin(0); intake.setSetpoint(75_deg);}, {&intake}).ToPtr()))
+    .AndThen(std::move(returnCMD)).AndThen(std::move(placeCMD).ToPtr());
+  //return std::move(placeCMD).ToPtr().AndThen(([this] {swerve.Drive(-0.5_mps, 0_mps, 0_rad_per_s, true);}, {&swerve}).Until(swerve.getPose().X() > 1.5_m));
 }

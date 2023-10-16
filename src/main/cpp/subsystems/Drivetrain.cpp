@@ -49,6 +49,16 @@ void Drivetrain::Drive(units::meters_per_second_t xSpeed,
     rightBack.setDesiredState(br);
 }
 
+void Drivetrain::driveFieldRelative(frc::ChassisSpeeds speeds)
+{
+    auto states = SwerveConstants::kinematics.ToSwerveModuleStates(speeds);
+    auto [fl, fr, bl, br] = states;
+    leftFront.setDesiredState(fl);
+    rightFront.setDesiredState(fr);
+    leftBack.setDesiredState(bl);
+    rightBack.setDesiredState(br);
+}
+
 void Drivetrain::updateOdometry()
 {
     odometry.Update(gyro.GetRotation2d(), 
@@ -91,4 +101,13 @@ void Drivetrain::Periodic()
     frc::SmartDashboard::PutNumber("RFCoder", rightFront.getCanCoder());
     frc::SmartDashboard::PutNumber("RBCoder", rightBack.getCanCoder());
     //printf("Right Back Deg: %f\n", rightBack.getPosition().angle.Degrees().value());
+}
+
+frc::ChassisSpeeds Drivetrain::robotRelativeSpeeds()
+{
+    frc::SwerveModuleState lf = leftFront.getState();
+    frc::SwerveModuleState fr = rightFront.getState();
+    frc::SwerveModuleState bl = leftBack.getState();
+    frc::SwerveModuleState br = rightBack.getState();
+    return SwerveConstants::kinematics.ToChassisSpeeds(lf, fr, bl, br);
 }

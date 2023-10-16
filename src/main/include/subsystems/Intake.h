@@ -36,6 +36,8 @@ class Intake : public frc2::SubsystemBase
 
     void setSetpoint(units::degree_t x);
 
+    units::degree_t getPos();
+
     units::degree_t getPoint();
 
     private:

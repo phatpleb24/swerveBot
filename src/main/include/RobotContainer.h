@@ -9,8 +9,7 @@
 #include "subsystems/Drivetrain.h"
 #include "subsystems/Elevator.h"
 #include "subsystems/Intake.h"
-#include <pathplanner/lib/util/ReplanningConfig.h>
-#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/auto/SwerveAutoBuilder.h>
 
 class RobotContainer {
  public:
@@ -21,7 +20,6 @@ class RobotContainer {
   Elevator elevator;
   Intake intake;
   std::unordered_map<std::string, std::shared_ptr<frc2::Command>> eventMap;
-
 
  private:
   void ConfigureBindings();
