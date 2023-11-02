@@ -27,8 +27,6 @@ class Drivetrain : public frc2::SubsystemBase
     static constexpr double kGearRatio = 8.45;
     static constexpr units::inch_t kWhellRadiusInches = 3_in;
     static constexpr int k100msPerSecond = 10;
-    static constexpr units::meters_per_second_t kMaxSpeed = 5_mps;
-    static constexpr auto kMaxAngularSpeed = 3_rad / 1_s;
     frc::Field2d m_field;
     bool fieldRelative;
 
@@ -50,6 +48,7 @@ class Drivetrain : public frc2::SubsystemBase
 
     frc::Pose2d getPose();
 
+    void wheelReset();
     
     frc::SlewRateLimiter<units::dimensionless::scalar> m_xspeedLimiter{3 / 1_s};
     frc::SlewRateLimiter<units::dimensionless::scalar> m_yspeedLimiter{3 / 1_s};

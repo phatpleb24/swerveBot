@@ -41,7 +41,7 @@ class Intake : public frc2::SubsystemBase
     units::degree_t getPoint();
 
     private:
-    units::degree_t setPoint = 75_deg;
+    units::degree_t setPoint = 80_deg;
     int horizontalPosFalcon = 0;
     double maxGravityFF = .07;
 

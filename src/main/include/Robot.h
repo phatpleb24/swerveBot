@@ -30,7 +30,7 @@ class Robot : public frc::TimedRobot {
   void TestExit() override;
 
  private:
-  frc::SendableChooser<frc2::Command*> chooser;
+  frc::SendableChooser<std::string> chooser;
   std::optional<frc2::CommandPtr> m_autonomousCommand;
 
   RobotContainer m_container;

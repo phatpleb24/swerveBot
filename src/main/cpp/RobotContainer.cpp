@@ -39,7 +39,7 @@ RobotContainer::RobotContainer() {
       auto ySpeed = swerve.m_yspeedLimiter.Calculate(std::clamp(frc::ApplyDeadband(-controller.GetLeftX(), 0.10), -0.4,0.4) /** swerve.kMaxSpeed.value()*/);
       //old rot speed values -0.2 - 0.2
       auto rotSpeed = swerve.m_rotLimiter.Calculate(std::clamp(frc::ApplyDeadband(controller.GetRightX(), 0.10),-1.0,  1.0) /** swerve.kMaxAngularSpeed.value()*/);
-      swerve.Drive(xSpeed * swerve.kMaxSpeed, ySpeed * swerve.kMaxSpeed, rotSpeed * swerve.kMaxAngularSpeed, swerve.fieldRelative);
+      swerve.Drive(xSpeed * SwerveConstants::kMaxSpeed, ySpeed * SwerveConstants::kMaxSpeed, rotSpeed * SwerveConstants::kMaxAngularSpeed, swerve.fieldRelative);
     }, 
     {&swerve}));
   
@@ -48,7 +48,7 @@ RobotContainer::RobotContainer() {
     {
       if(controller2.GetAButtonPressed())
       {
-        elevator.voltage();
+        //elevator.voltage();
         //elevator.setPos(27_in);
       }
       else if(controller2.GetBButtonPressed())
@@ -65,7 +65,7 @@ RobotContainer::RobotContainer() {
     {
       if(controller2.GetYButton())
       {
-        intake.setSetpoint(75_deg);
+        intake.setSetpoint(80_deg);
       }
       else if(controller2.GetXButton()){
         intake.setSetpoint(0_deg);
@@ -137,7 +137,6 @@ void RobotContainer::ConfigureBindings()
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {
-  eventMap.emplace("intakeDown", std::make_shared<IntakeDown>(&intake));
   pathplanner::SwerveAutoBuilder swerveAuto
   {
     [this]() {return swerve.getPose();},
@@ -149,14 +148,45 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand()
     {&swerve},
     true
   };
+  eventMap.emplace("intakeDown", std::make_shared<IntakeDown>(&intake));
   pathplanner::PathPlannerTrajectory traj1 = pathplanner::PathPlanner::loadPath("farLeftBlue", pathplanner::PathConstraints(4_mps, 3_mps_sq));
   pathplanner::PathPlannerTrajectory traj2 = pathplanner::PathPlanner::loadPath("farLeftBlueReturn", pathplanner::PathConstraints(4_mps, 3_mps_sq));
   auto moveCMD = swerveAuto.followPathWithEvents(traj1);
   auto returnCMD = swerveAuto.followPath(traj2);
   PlacementSequence placeCMD = PlacementSequence(&intake);
   return std::move(placeCMD).ToPtr()
+    //.AndThen(std::move(frc2::InstantCommand([this] {swerve.wheelReset();}, {&swerve}).ToPtr()))
     .AndThen(std::move(moveCMD))
     .AndThen(std::move(frc2::InstantCommand([this] {intake.intakeSpin(0); intake.setSetpoint(75_deg);}, {&intake}).ToPtr()))
     .AndThen(std::move(returnCMD)).AndThen(std::move(placeCMD).ToPtr());
   //return std::move(placeCMD).ToPtr().AndThen(([this] {swerve.Drive(-0.5_mps, 0_mps, 0_rad_per_s, true);}, {&swerve}).Until(swerve.getPose().X() > 1.5_m));
+}
+
+frc2::CommandPtr RobotContainer::balanceRoutine()
+{
+  pathplanner::SwerveAutoBuilder swerveAuto
+  {
+    [this]() {return swerve.getPose();},
+    [this](auto initPose) {swerve.resetOdometry(initPose);},
+    pathplanner::PIDConstants(0,0,0),
+    pathplanner::PIDConstants(0,0,0),
+    [this](auto speeds) {swerve.driveFieldRelative(speeds);},
+    eventMap,
+    {&swerve},
+    true
+  };
+  pathplanner::PathPlannerTrajectory traj1 = pathplanner::PathPlanner::loadPath("mid", pathplanner::PathConstraints(4_mps, 2_mps_sq));
+  auto moveCMD = swerveAuto.followPath(traj1);
+  PlacementSequence placeCMD = PlacementSequence(&intake);
+  Balance balanceCMD = Balance(&swerve);
+  printf("Init Pose: %.2f\n", traj1.getInitialPose().Rotation().Degrees());
+  return std::move(placeCMD).ToPtr()
+    .AndThen(std::move(moveCMD))
+    .AndThen(std::move(balanceCMD).ToPtr());
+}
+
+frc2::CommandPtr RobotContainer::place()
+{
+  PlacementSequence placeCMD = PlacementSequence(&intake);
+  return std::move(placeCMD).ToPtr();
 }

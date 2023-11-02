@@ -13,12 +13,13 @@
 class SwerveModule
 {
     public:
-    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, int angleOffset, bool invert);
+    SwerveModule(int driveChannel, int turnChannel,int encoderChannel, double angleOffset, bool invert);
     frc::SwerveModuleState getState();
     frc::SwerveModulePosition getPosition();
     double getTurnEncoderCnt();
     double getDegrees();
     void setDesiredState(const frc::SwerveModuleState& state);
+    void setDesiredStateAuto(const frc::SwerveModuleState& state);
     static constexpr auto kMaxAngularVelocity =
       std::numbers::pi * 1_rad / 1_s;  // radians per second
     static constexpr auto kMaxAngularAcceleration =

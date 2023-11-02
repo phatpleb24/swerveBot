@@ -16,6 +16,8 @@ class RobotContainer {
   RobotContainer();
 
   frc2::CommandPtr GetAutonomousCommand();
+  frc2::CommandPtr balanceRoutine();
+  frc2::CommandPtr place();
   Drivetrain swerve;
   Elevator elevator;
   Intake intake;
@@ -25,4 +27,7 @@ class RobotContainer {
   void ConfigureBindings();
   frc2::CommandXboxController controller{0};
   frc2::CommandXboxController controller2{1};
+
+  
+ 
 };

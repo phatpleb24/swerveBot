@@ -10,12 +10,12 @@ void Balance::Initialize()
 {
     printf("Balance Init\n");
     maxPitch = 15;
-    maxSpeed = 1;
+    maxSpeed = 0.4;
     pitchTolerance = 0.5;
-    balanceDuration = 2;
+    balanceDuration = 1;
     timerStarted = false;
     debugTimestamp = frc::Timer::GetFPGATimestamp().value();
-    levelAngle = 0;
+    levelAngle = 8;
 }
 
 void Balance::Execute()
@@ -40,7 +40,7 @@ void Balance::Execute()
     double roll = swerve->getRoll();
     double speed = std::max(-maxSpeed, std::min(maxSpeed, maxSpeed * (roll - levelAngle) / maxPitch));
     //printf("Volts %.03f Roll %0.3f\n", voltage, roll);
-    swerve->Drive(units::meters_per_second_t{1}, 0_mps, 0_deg_per_s, false);
+    swerve->driveFieldRelative({units::meters_per_second_t{speed}, 0_mps, 0_deg_per_s});
 }
 
 bool Balance::IsFinished()

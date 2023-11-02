@@ -23,10 +23,10 @@ namespace SwerveConstants
     const int CANCoderLB = 14;
     const int CANCoderRF = 13;
     const int CANCoderRB = 15;
-    const int angleOffsetLF = 190.89;
-    const int angleOffsetLB = 297;
-    const int angleOffsetRB = 8.43;
-    const int angleOffsetRF = 135; 
+    const double angleOffsetLF = 178.418;
+    const double angleOffsetLB = 204.17;
+    const double angleOffsetRB = 358.154;
+    const double angleOffsetRF = 220.254; 
     //const int angleOffsetRF = 318.25;
     constexpr units::volt_t kS = 0.14643_V;
     constexpr auto kV = 1.8676 * 1_V / 1_mps;
@@ -47,6 +47,8 @@ namespace SwerveConstants
     static constexpr double kDriveGearRatio = 6.55;
     static constexpr double kAngleGearRatio = 10.28;
     static constexpr int k100msPerSecond = 10; 
+    static constexpr units::meters_per_second_t kMaxSpeed = 7_mps;
+    static constexpr auto kMaxAngularSpeed = 3_rad / 1_s;
 };
 
 namespace WristPositions

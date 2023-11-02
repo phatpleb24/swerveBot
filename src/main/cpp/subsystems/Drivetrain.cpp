@@ -21,7 +21,7 @@ void Drivetrain::Drive(units::meters_per_second_t xSpeed,
                        units::degrees_per_second_t rot, bool fieldRelative)
 {
     auto states = SwerveConstants::kinematics.ToSwerveModuleStates(fieldRelative ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.GetRotation2d()) : frc::ChassisSpeeds{xSpeed, ySpeed, rot});
-    SwerveConstants::kinematics.DesaturateWheelSpeeds(&states, kMaxSpeed);
+    SwerveConstants::kinematics.DesaturateWheelSpeeds(&states, SwerveConstants::kMaxSpeed);
     auto [fl, fr, bl, br] = states;
     if(localFL.angle != fl.angle || localFL.speed != fl.speed)
     {
@@ -51,23 +51,24 @@ void Drivetrain::Drive(units::meters_per_second_t xSpeed,
 
 void Drivetrain::driveFieldRelative(frc::ChassisSpeeds speeds)
 {
+    speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(speeds, gyro.GetRotation2d());
     auto states = SwerveConstants::kinematics.ToSwerveModuleStates(speeds);
     auto [fl, fr, bl, br] = states;
-    leftFront.setDesiredState(fl);
-    rightFront.setDesiredState(fr);
-    leftBack.setDesiredState(bl);
-    rightBack.setDesiredState(br);
+    leftFront.setDesiredStateAuto(fl);
+    rightFront.setDesiredStateAuto(fr);
+    leftBack.setDesiredStateAuto(bl);
+    rightBack.setDesiredStateAuto(br);
 }
 
 void Drivetrain::updateOdometry()
 {
     odometry.Update(gyro.GetRotation2d(), 
-        modulePos);
+        {leftFront.getPosition(), rightFront.getPosition(), leftBack.getPosition(), rightBack.getPosition()});
 }
 
 void Drivetrain::resetOdometry(frc::Pose2d pose)
 {
-    odometry.ResetPosition(gyro.GetRotation2d(), modulePos, pose);
+    odometry.ResetPosition(gyro.GetRotation2d(), {leftFront.getPosition(), rightFront.getPosition(), leftBack.getPosition(), rightBack.getPosition()}, pose);
 }
 
 frc::Pose2d Drivetrain::getPose()
@@ -98,6 +99,7 @@ void Drivetrain::Periodic()
     frc::SmartDashboard::PutNumber("RFCoder", rightFront.getCanCoder());
     frc::SmartDashboard::PutNumber("RBCoder", rightBack.getCanCoder());
     //printf("Right Back Deg: %f\n", rightBack.getPosition().angle.Degrees().value());
+    printf("Robot Angle: %.2f\n", odometry.GetPose().Rotation().Degrees().value());
 }
 
 frc::ChassisSpeeds Drivetrain::robotRelativeSpeeds()
@@ -107,4 +109,12 @@ frc::ChassisSpeeds Drivetrain::robotRelativeSpeeds()
     frc::SwerveModuleState bl = leftBack.getState();
     frc::SwerveModuleState br = rightBack.getState();
     return SwerveConstants::kinematics.ToChassisSpeeds(lf, fr, bl, br);
+}
+
+void Drivetrain::wheelReset()
+{
+    leftFront.resetToAbsolute();
+    rightFront.resetToAbsolute();
+    rightBack.resetToAbsolute();
+    leftBack.resetToAbsolute();
 }
